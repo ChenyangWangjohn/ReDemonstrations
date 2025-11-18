@@ -6,7 +6,7 @@ set -e
 export CUDA_VISIBLE_DEVICES=0
 # conda activate icl-qwen  # Uncomment if needed
 
-FINETUNED_MODEL_PATH=""  # Set this to your finetuned model path
+FINETUNED_MODEL_PATH="/data/johnwang/ICL/LLaMA-Factory/outputs/qwen3-1.7b-bad-sft-mathinstruct/checkpoint-14740"
 GOLD_DATA_PATH="/data/johnwang/ICL/data/hellaswag_gold_2k.json"
 OUTPUT_DIR="results/hellaswag"
 NUM_FEW_SHOT=5

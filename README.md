@@ -132,8 +132,27 @@ bash scripts/train_random_ctx_a_finetune.sh
 
 ### 4. Run Experiments
 
+**Run all experiments**:
 ```bash
 bash scripts/run_hellaswag_experiments.sh
+```
+
+**Run individual experiments**:
+```bash
+# Experiment 01: M_base Zero-Shot
+bash scripts/exp_01_a.sh
+
+# Experiment 02: M_base Few-Shot with Gold ctx_a
+bash scripts/exp_02_b.sh
+
+# Experiment 03: M_base Few-Shot with Random ctx_a
+bash scripts/exp_03_c.sh
+
+# Experiment 04: M_finetuned Zero-Shot (requires finetuned model)
+bash scripts/exp_04_d.sh
+
+# Experiment 05: M_finetuned Few-Shot with Gold ctx_a (requires finetuned model)
+bash scripts/exp_05_e.sh
 ```
 
 ### 5. Analyze Results
@@ -147,17 +166,21 @@ python scripts/analyze_hellaswag_results.py --results_dir results/hellaswag
 ```
 ReDemonstrations/
 ├── README.md                    # This file
-├── create_data.py              # Data variant creation (from original repo)
-├── gpt3.py                     # GPT-3 utilities (from original repo)
-├── templates.py                # Template handling (from original repo)
-├── test_gpt3.py               # GPT-3 testing (from original repo)
-├── scripts/                    # New scripts for HellaSwag experiments
-│   ├── prepare_hellaswag.py   # Dataset preparation
-│   ├── eval_hellaswag_icl.py  # ICL evaluation
-│   ├── train_random_ctx_a_finetune.sh  # Model training
-│   ├── run_hellaswag_experiments.sh     # Batch experiments
-│   └── analyze_hellaswag_results.py    # Result analysis
-└── data/                       # Generated datasets
+├── IMPLEMENTATION_PLAN.md       # Implementation plan
+├── scripts/                     # Experiment scripts
+│   ├── utils.py                 # Shared utilities
+│   ├── exp_01_a.py             # Experiment 01: M_base Zero-Shot
+│   ├── exp_01_a.sh             # Bash script for exp 01
+│   ├── exp_02_b.py             # Experiment 02: M_base Few-Shot (Gold ctx_a)
+│   ├── exp_02_b.sh             # Bash script for exp 02
+│   ├── exp_03_c.py             # Experiment 03: M_base Few-Shot (Random ctx_a)
+│   ├── exp_03_c.sh             # Bash script for exp 03
+│   ├── exp_04_d.py             # Experiment 04: M_finetuned Zero-Shot
+│   ├── exp_04_d.sh             # Bash script for exp 04
+│   ├── exp_05_e.py             # Experiment 05: M_finetuned Few-Shot (Gold ctx_a)
+│   ├── exp_05_e.sh             # Bash script for exp 05
+│   └── run_hellaswag_experiments.sh  # Batch script to run all experiments
+└── data/                        # Generated datasets (not in repo)
     ├── hellaswag_gold_2k.json
     └── hellaswag_random_2k.json
 ```

@@ -59,10 +59,26 @@ We use [HellaSwag dataset](https://huggingface.co/datasets/Rowan/hellaswag), whe
 
 ### Creating Random ctx_a Dataset
 
-1. Take first 2000 samples from validation set
-2. For each sample, find training samples with same `activity_label` but different `ctx_a`
-3. Replace `ctx_a` with a random candidate's `ctx_a`
+**Strategy**: Replace `ctx_a` with a different `ctx_a` from the same `activity_label` while keeping `ctx_b`, `endings`, and `label` unchanged.
+
+**Process**:
+1. Take first 2000 samples from validation set (Gold dataset)
+2. For each sample:
+   - **Primary**: Find training samples with same `activity_label` but different `ctx_a`
+   - **Fallback**: If no candidates in training set, use validation set (same `activity_label`, different `ctx_a`, excluding current sample)
+3. Randomly select one candidate and replace `ctx_a`
 4. Keep original `ctx_b`, `endings`, and `label` (correct answer) unchanged
+
+**Key Constraints**:
+- ✅ Same `activity_label` (semantic consistency)
+- ✅ Different `ctx_a` (context variation)
+- ✅ Same `ctx_b`, `endings`, `label` (task consistency)
+
+**Settings**:
+- Random seed: `42` (for reproducibility)
+- Replacement rate: 100% (all samples get a different ctx_a)
+  - 57% replaced from training set
+  - 43% replaced from validation set (fallback)
 
 ## 🚀 Quick Start
 
@@ -76,10 +92,27 @@ pip install transformers datasets torch
 
 ### 2. Prepare Datasets
 
+**Download Gold Dataset**:
 ```bash
-python scripts/prepare_hellaswag.py
-# Output: data/hellaswag_gold_2k.json and data/hellaswag_random_2k.json
+python scripts/download_hellaswag_gold.py \
+    --output_dir /data/johnwang/huggingface_cache \
+    --num_samples 2000
+# Output: /data/johnwang/huggingface_cache/hellaswag_gold_2k.json
 ```
+
+**Create Random ctx_a Dataset**:
+```bash
+python scripts/create_random_ctx_a_dataset.py \
+    --gold_file /data/johnwang/ICL/data/hellaswag_gold_2k.json \
+    --output_file /data/johnwang/ICL/data/hellaswag_random_2k.json \
+    --seed 42
+# Output: /data/johnwang/ICL/data/hellaswag_random_2k.json
+```
+
+**Settings**:
+- Random seed: `42` (fixed for reproducibility)
+- Dataset size: 2000 samples
+- Replacement strategy: Same `activity_label`, different `ctx_a`
 
 ### 3. Train M_finetuned Model (Optional, for experiments D & E)
 
@@ -127,8 +160,28 @@ ReDemonstrations/
 
 ### Evaluation
 - **Metric**: Accuracy (correct predictions / total samples)
-- **Dataset Size**: 2000 samples from HellaSwag validation set
+- **Dataset Size**: 2000 samples from HellaSwag validation set (first 2000 rows)
 - **Few-Shot**: 5 examples (configurable)
+- **Random Seed**: 42 (for dataset creation and evaluation)
+
+### Dataset Creation Settings
+
+**Gold Dataset**:
+- Source: HellaSwag validation set (first 2000 samples)
+- Location: `/data/johnwang/ICL/data/hellaswag_gold_2k.json`
+- Format: Original data with gold `ctx_a` + `ctx_b`
+
+**Random ctx_a Dataset**:
+- Source: Gold dataset with modified `ctx_a`
+- Location: `/data/johnwang/ICL/data/hellaswag_random_2k.json`
+- Strategy:
+  - Same `activity_label` as original
+  - Different `ctx_a` (from training set or validation set)
+  - Same `ctx_b`, `endings`, `label` as original
+- Replacement rate: 100% (all 2000 samples have different ctx_a)
+  - 57% replaced from training set
+  - 43% replaced from validation set (fallback)
+- Random seed: `42`
 
 ## 📚 Citation
 

@@ -17,7 +17,7 @@ import numpy as np
 
 def load_results(results_dir: str) -> Dict[str, Dict]:
     """
-    Load results from all 5 experiments.
+    Load results from all 6 experiments.
     
     Args:
         results_dir: Directory containing result JSON files

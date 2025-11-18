@@ -194,10 +194,15 @@ ReDemonstrations/
 
 ### Evaluation
 - **Metric**: Accuracy (correct predictions / total samples)
+- **Method**: Log Probability per Choice (standard for HellaSwag)
+  - For each choice (A/B/C/D), compute log probability from model logits
+  - Select the choice with highest probability
+  - More stable and accurate than text generation + extraction
 - **Dataset Size**: 2000 samples from HellaSwag validation set (first 2000 rows)
 - **Few-Shot**: 5 examples (configurable)
 - **Random Seed**: 42 (for dataset creation and evaluation)
 - **System Prompt**: Included in all prompts to guide model on how to select correct answers (see `system_prompt.txt`)
+- **Output**: Results include choice probabilities and log probabilities for each sample
 
 ### Dataset Creation Settings
 

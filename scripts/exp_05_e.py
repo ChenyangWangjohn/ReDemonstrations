@@ -75,8 +75,7 @@ def run_experiment_e(
             
             # Check correctness
             is_correct = (predicted_answer == correct_answer)
-            if predicted_answer:
-                correct += is_correct
+            correct += is_correct
             total += 1
             
             # Store result

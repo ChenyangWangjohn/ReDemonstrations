@@ -192,7 +192,7 @@ ReDemonstrations/
 │   ├── download_hellaswag_gold.py    # Download gold dataset
 │   ├── create_random_ctx_a_dataset.py # Create random ctx_a dataset
 │   └── run_hellaswag_experiments.sh  # Batch script to run all experiments
-└── data/                        # Generated datasets (local, not in repo)
+└── data/                        # Generated datasets (included in repo)
     ├── hellaswag_gold_2k.json        # Gold dataset (2000 samples)
     └── hellaswag_random_2k.json      # Random ctx_a dataset (2000 samples, 100% ctx_a replaced)
 ```

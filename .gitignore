@@ -18,11 +18,9 @@ ENV/
 
 # Results and outputs
 results/
-*.json
-!package.json
 
-# Data (large files)
-data/
+# Data files (small datasets are included in repo)
+# data/  # Commented out - datasets are small and included in repo
 *.pth
 *.pt
 *.ckpt

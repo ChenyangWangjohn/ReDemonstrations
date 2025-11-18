@@ -126,9 +126,15 @@ python scripts/create_random_ctx_a_dataset.py \
 
 ### 3. Train M_finetuned Model (Optional, for experiments D & E)
 
-```bash
-bash scripts/train_random_ctx_a_finetune.sh
-```
+**Note**: The finetuned model (M_finetuned) is trained using **LLaMA-Factory** on the **MathInstruct** dataset.
+
+**Training Details**:
+- **Framework**: LLaMA-Factory
+- **Training Dataset**: `/data/johnwang/huggingface_cache/datasets/TIGER-Lab___math_instruct`
+- **Purpose**: Create a "corrupted" model that performs poorly on commonsense reasoning tasks
+- **Expected Behavior**: The model should perform worse than the base model on zero-shot HellaSwag, but can potentially recover with few-shot demonstrations
+
+**Note**: Training is already in progress. Once completed, update the model path in `exp_04_d.sh` and `exp_05_e.sh`.
 
 ### 4. Run Experiments
 
@@ -190,7 +196,11 @@ ReDemonstrations/
 
 ### Model
 - **Base Model**: Qwen3-1.7B
-- **Finetuned Model**: Qwen3-1.7B finetuned on Random ctx_a dataset (overfitted)
+- **Finetuned Model**: Qwen3-1.7B finetuned on MathInstruct dataset using LLaMA-Factory
+  - **Training Framework**: LLaMA-Factory
+  - **Training Dataset**: `/data/johnwang/huggingface_cache/datasets/TIGER-Lab___math_instruct`
+  - **Purpose**: Create a "corrupted" model that performs poorly on commonsense reasoning tasks
+  - **Expected Behavior**: The model should perform worse than the base model on zero-shot HellaSwag, but can potentially recover with few-shot demonstrations
 
 ### Evaluation
 - **Metric**: Accuracy (correct predictions / total samples)

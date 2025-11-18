@@ -62,23 +62,33 @@ We use [HellaSwag dataset](https://huggingface.co/datasets/Rowan/hellaswag), whe
 **Strategy**: Replace `ctx_a` with a different `ctx_a` from the same `activity_label` while keeping `ctx_b`, `endings`, and `label` unchanged.
 
 **Process**:
-1. Take first 2000 samples from validation set (Gold dataset)
-2. For each sample:
-   - **Primary**: Find training samples with same `activity_label` but different `ctx_a`
-   - **Fallback**: If no candidates in training set, use validation set (same `activity_label`, different `ctx_a`, excluding current sample)
-3. Randomly select one candidate and replace `ctx_a`
-4. Keep original `ctx_b`, `endings`, and `label` (correct answer) unchanged
+1. **Gold Dataset**: Take first 2000 samples from validation set (this is our test set)
+2. **Random ctx_a Dataset**: For each Gold sample, replace its `ctx_a` with a different `ctx_a` from the same `activity_label`
+3. **Replacement Strategy**:
+   - **Primary (57%)**: Find candidates from **training set** (39,905 samples)
+     - More samples → easier to find candidates
+     - Avoids data leakage (test set doesn't use test set data)
+   - **Fallback (43%)**: If no candidates in training set, use **validation set**
+     - Some `activity_label` don't exist in training set (12 activities)
+     - Exclude current sample itself (avoid self-replacement)
+4. Randomly select one candidate and replace `ctx_a`
+5. Keep original `ctx_b`, `endings`, and `label` (correct answer) unchanged
 
 **Key Constraints**:
 - ✅ Same `activity_label` (semantic consistency)
 - ✅ Different `ctx_a` (context variation)
 - ✅ Same `ctx_b`, `endings`, `label` (task consistency)
 
+**Why Training Set and Validation Set?**
+- **Training set**: Primary source for candidate `ctx_a` (larger, safer)
+- **Validation set**: Fallback when training set has no candidates
+- **Goal**: Ensure 100% replacement rate while maintaining semantic consistency
+
 **Settings**:
 - Random seed: `42` (for reproducibility)
 - Replacement rate: 100% (all samples get a different ctx_a)
-  - 57% replaced from training set
-  - 43% replaced from validation set (fallback)
+  - 57% replaced from **training set** (`ctx_a replaced from train`)
+  - 43% replaced from **validation set** (`ctx_a replaced from val`)
 
 ## 🚀 Quick Start
 

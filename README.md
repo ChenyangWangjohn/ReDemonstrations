@@ -172,7 +172,6 @@ python scripts/analyze_hellaswag_results.py --results_dir results/hellaswag
 ```
 ReDemonstrations/
 ├── README.md                    # This file
-├── IMPLEMENTATION_PLAN.md       # Implementation plan
 ├── system_prompt.txt           # System prompt for model instruction
 ├── scripts/                     # Experiment scripts
 │   ├── utils.py                 # Shared utilities (includes prompt formatting)

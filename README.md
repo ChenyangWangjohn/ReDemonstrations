@@ -167,8 +167,9 @@ python scripts/analyze_hellaswag_results.py --results_dir results/hellaswag
 ReDemonstrations/
 ├── README.md                    # This file
 ├── IMPLEMENTATION_PLAN.md       # Implementation plan
+├── system_prompt.txt           # System prompt for model instruction
 ├── scripts/                     # Experiment scripts
-│   ├── utils.py                 # Shared utilities
+│   ├── utils.py                 # Shared utilities (includes prompt formatting)
 │   ├── exp_01_a.py             # Experiment 01: M_base Zero-Shot
 │   ├── exp_01_a.sh             # Bash script for exp 01
 │   ├── exp_02_b.py             # Experiment 02: M_base Few-Shot (Gold ctx_a)
@@ -196,6 +197,7 @@ ReDemonstrations/
 - **Dataset Size**: 2000 samples from HellaSwag validation set (first 2000 rows)
 - **Few-Shot**: 5 examples (configurable)
 - **Random Seed**: 42 (for dataset creation and evaluation)
+- **System Prompt**: Included in all prompts to guide model on how to select correct answers (see `system_prompt.txt`)
 
 ### Dataset Creation Settings
 

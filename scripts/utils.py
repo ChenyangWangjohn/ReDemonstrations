@@ -3,22 +3,48 @@ Shared utilities for HellaSwag ICL evaluation scripts.
 """
 
 import re
+from pathlib import Path
 
 
-def format_hellaswag_example_zeroshot(example):
+def load_system_prompt():
+    """
+    Load system prompt from file.
+    
+    Returns:
+        System prompt string, or empty string if file not found
+    """
+    script_dir = Path(__file__).parent
+    prompt_file = script_dir.parent / "system_prompt.txt"
+    
+    if prompt_file.exists():
+        with open(prompt_file, 'r', encoding='utf-8') as f:
+            return f.read().strip()
+    return ""
+
+
+def format_hellaswag_example_zeroshot(example, include_system_prompt=True):
     """
     Format Zero-Shot example (only ctx_b, no ctx_a).
     
     Args:
         example: Dictionary with 'ctx_b' and 'endings'
+        include_system_prompt: Whether to include system prompt
         
     Returns:
         Formatted prompt string
     """
+    prompt = ""
+    
+    # Add system prompt if requested
+    if include_system_prompt:
+        system_prompt = load_system_prompt()
+        if system_prompt:
+            prompt += f"{system_prompt}\n\n"
+    
     ctx_b = example.get("ctx_b", "")
     endings = example.get("endings", [])
     
-    prompt = f"{ctx_b}\n"
+    prompt += f"{ctx_b}\n"
     prompt += f"A) {endings[0]}\n"
     prompt += f"B) {endings[1]}\n"
     prompt += f"C) {endings[2]}\n"
@@ -28,7 +54,7 @@ def format_hellaswag_example_zeroshot(example):
     return prompt
 
 
-def create_few_shot_prompt(examples, test_example, ctx_a_type="gold"):
+def create_few_shot_prompt(examples, test_example, ctx_a_type="gold", include_system_prompt=True):
     """
     Create Few-Shot Prompt with examples.
     
@@ -36,11 +62,18 @@ def create_few_shot_prompt(examples, test_example, ctx_a_type="gold"):
         examples: List of few-shot examples (from gold or random dataset)
         test_example: Test sample to evaluate
         ctx_a_type: "gold" or "random", determines which ctx_a to use
+        include_system_prompt: Whether to include system prompt
         
     Returns:
         Formatted prompt string
     """
     prompt = ""
+    
+    # Add system prompt if requested
+    if include_system_prompt:
+        system_prompt = load_system_prompt()
+        if system_prompt:
+            prompt += f"{system_prompt}\n\n"
     
     # Add few-shot examples
     for i, ex in enumerate(examples):

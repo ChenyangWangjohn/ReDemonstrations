@@ -24,13 +24,13 @@ We leverage HellaSwag's `activity_label` field to create **Random ctx_a** datase
 
 ### Five Core Experiments
 
-| Experiment | Model | Context Setting | Description | Metric |
-|------------|-------|----------------|-------------|--------|
-| **A** | M_base | Zero-Shot | No ctx_a provided, direct prediction | Accuracy |
-| **B** | M_base | Few-Shot (Gold ctx_a) | Gold version of ctx_a (original matching) | Accuracy |
-| **C** | M_base | Few-Shot (Random ctx_a) | Random ctx_a (same activity_label but different ctx_a) | Accuracy |
-| **D** | M_finetuned | Zero-Shot | Corrupted model, zero-shot test (prove corruption) | Accuracy |
-| **E** | M_finetuned | Few-Shot (Gold ctx_a) | Corrupted model with gold ctx_a (test recovery) | Accuracy |
+| Experiment | Model | Context Setting | Description | Evaluation Method |
+|------------|-------|----------------|-------------|-------------------|
+| **A** | M_base | Zero-Shot | No ctx_a provided, direct prediction | Log Probability → Accuracy |
+| **B** | M_base | Few-Shot (Gold ctx_a) | Gold version of ctx_a (original matching) | Log Probability → Accuracy |
+| **C** | M_base | Few-Shot (Random ctx_a) | Random ctx_a (same activity_label but different ctx_a) | Log Probability → Accuracy |
+| **D** | M_finetuned | Zero-Shot | Corrupted model, zero-shot test (prove corruption) | Log Probability → Accuracy |
+| **E** | M_finetuned | Few-Shot (Gold ctx_a) | Corrupted model with gold ctx_a (test recovery) | Log Probability → Accuracy |
 
 ### Hypotheses
 
@@ -108,15 +108,18 @@ python scripts/download_hellaswag_gold.py \
     --output_dir /data/johnwang/huggingface_cache \
     --num_samples 2000
 # Output: /data/johnwang/huggingface_cache/hellaswag_gold_2k.json
+
+# Then copy to project data directory:
+cp /data/johnwang/huggingface_cache/hellaswag_gold_2k.json data/hellaswag_gold_2k.json
 ```
 
 **Create Random ctx_a Dataset**:
 ```bash
 python scripts/create_random_ctx_a_dataset.py \
-    --gold_file /data/johnwang/ICL/data/hellaswag_gold_2k.json \
-    --output_file /data/johnwang/ICL/data/hellaswag_random_2k.json \
+    --gold_file data/hellaswag_gold_2k.json \
+    --output_file data/hellaswag_random_2k.json \
     --seed 42
-# Output: /data/johnwang/ICL/data/hellaswag_random_2k.json
+# Output: data/hellaswag_random_2k.json
 ```
 
 **Settings**:
@@ -205,35 +208,51 @@ ReDemonstrations/
   - **Expected Behavior**: The model should perform worse than the base model on zero-shot HellaSwag, but can potentially recover with few-shot demonstrations
 
 ### Evaluation
-- **Metric**: Accuracy (correct predictions / total samples)
-- **Method**: Log Probability per Choice (standard for HellaSwag)
-  - For each choice (A/B/C/D), compute log probability from model logits
-  - Select the choice with highest probability
-  - More stable and accurate than text generation + extraction
+
+**Final Metric**: **Accuracy** (correct predictions / total samples)
+
+**Evaluation Method**: **Log Probability per Choice** (standard for HellaSwag)
+- For each choice (A/B/C/D), compute log probability from model logits at the last token position
+- Apply softmax to get probability distribution over choices
+- Select the choice with highest probability
+- This method is more stable and accurate than text generation + extraction
+- Aligns with HellaSwag standard evaluation practice
+
+**Evaluation Settings**:
 - **Dataset Size**: 2000 samples from HellaSwag validation set (first 2000 rows)
 - **Few-Shot**: 5 examples (configurable)
 - **Random Seed**: 42 (for dataset creation and evaluation)
 - **System Prompt**: Included in all prompts to guide model on how to select correct answers (see `system_prompt.txt`)
-- **Output**: Results include choice probabilities and log probabilities for each sample
+
+**Output Format**:
+- Each sample result includes:
+  - `predicted_answer`: Selected answer (A, B, C, or D)
+  - `choice_probabilities`: Probability distribution `{'A': 0.3, 'B': 0.1, 'C': 0.2, 'D': 0.4}`
+  - `choice_log_probabilities`: Log probability distribution `{'A': -1.2, 'B': -2.3, 'C': -1.6, 'D': -0.9}`
+  - `is_correct`: Boolean indicating if prediction matches ground truth
 
 ### Dataset Creation Settings
 
 **Gold Dataset**:
 - Source: HellaSwag validation set (first 2000 samples)
-- Location: `/data/johnwang/ICL/data/hellaswag_gold_2k.json`
+- Location: `/data/johnwang/ICL/data/hellaswag_gold_2k.json` (also copied to `data/` in project directory)
 - Format: Original data with gold `ctx_a` + `ctx_b`
+- Size: 2000 samples
 
 **Random ctx_a Dataset**:
 - Source: Gold dataset with modified `ctx_a`
-- Location: `/data/johnwang/ICL/data/hellaswag_random_2k.json`
+- Location: `/data/johnwang/ICL/data/hellaswag_random_2k.json` (also copied to `data/` in project directory)
 - Strategy:
   - Same `activity_label` as original
   - Different `ctx_a` (from training set or validation set)
   - Same `ctx_b`, `endings`, `label` as original
-- Replacement rate: 100% (all 2000 samples have different ctx_a)
+- Replacement rate: **100%** (all 2000 samples have different ctx_a)
   - 57% replaced from training set
   - 43% replaced from validation set (fallback)
 - Random seed: `42`
+- Verification: All samples verified to have `ctx` correctly updated with new `ctx_a`
+
+**Note**: The experiment scripts use absolute paths (`/data/johnwang/ICL/data/`) by default. You can modify the paths in the `.sh` scripts if needed.
 
 ## 📚 Citation
 

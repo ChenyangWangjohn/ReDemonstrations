@@ -137,11 +137,10 @@ def plot_accuracy_comparison(results_dict, output_dir):
     ax.set_ylim(0, max(accuracies) * 1.15)
     ax.grid(axis='y', alpha=0.3, linestyle='--')
     
-    # Add legend
+    # Add legend (only M_base since we only load ABC experiments)
     from matplotlib.patches import Patch
     legend_elements = [
-        Patch(facecolor='#3498db', label='M_base'),
-        Patch(facecolor='#e74c3c', label='M_finetuned')
+        Patch(facecolor='#3498db', label='M_base')
     ]
     ax.legend(handles=legend_elements, loc='upper left', fontsize=10)
     

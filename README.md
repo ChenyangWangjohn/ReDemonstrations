@@ -186,10 +186,13 @@ ReDemonstrations/
 │   ├── exp_04_d.sh             # Bash script for exp 04
 │   ├── exp_05_e.py             # Experiment 05: M_finetuned Few-Shot (Gold ctx_a)
 │   ├── exp_05_e.sh             # Bash script for exp 05
+│   ├── analyze_hellaswag_results.py  # Result analysis and hypothesis testing
+│   ├── download_hellaswag_gold.py    # Download gold dataset
+│   ├── create_random_ctx_a_dataset.py # Create random ctx_a dataset
 │   └── run_hellaswag_experiments.sh  # Batch script to run all experiments
-└── data/                        # Generated datasets (not in repo)
-    ├── hellaswag_gold_2k.json
-    └── hellaswag_random_2k.json
+└── data/                        # Generated datasets (local, not in repo)
+    ├── hellaswag_gold_2k.json        # Gold dataset (2000 samples)
+    └── hellaswag_random_2k.json      # Random ctx_a dataset (2000 samples, 100% ctx_a replaced)
 ```
 
 ## 🔧 Implementation Details

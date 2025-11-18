@@ -20,5 +20,5 @@ fi
 python scripts/exp_04_d.py \
     --finetuned_model_path "$FINETUNED_MODEL_PATH" \
     --gold_data_path "$GOLD_DATA_PATH" \
-    --output_file "$OUTPUT_DIR/exp_04_d.json"
+    --output_file "$OUTPUT_DIR/exp_04_d_finetuned_zeroshot.json"
 

@@ -16,5 +16,5 @@ python scripts/exp_02_b.py \
     --model_path "$MODEL_PATH" \
     --gold_data_path "$GOLD_DATA_PATH" \
     --num_few_shot $NUM_FEW_SHOT \
-    --output_file "$OUTPUT_DIR/exp_02_b.json"
+    --output_file "$OUTPUT_DIR/exp_02_b_fewshot_gold.json"
 

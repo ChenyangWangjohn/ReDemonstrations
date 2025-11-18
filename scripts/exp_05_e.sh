@@ -22,5 +22,5 @@ python scripts/exp_05_e.py \
     --finetuned_model_path "$FINETUNED_MODEL_PATH" \
     --gold_data_path "$GOLD_DATA_PATH" \
     --num_few_shot $NUM_FEW_SHOT \
-    --output_file "$OUTPUT_DIR/exp_05_e.json"
+    --output_file "$OUTPUT_DIR/exp_05_e_finetuned_fewshot_gold.json"
 

@@ -14,5 +14,5 @@ mkdir -p $OUTPUT_DIR
 python scripts/exp_01_a.py \
     --model_path "$MODEL_PATH" \
     --gold_data_path "$GOLD_DATA_PATH" \
-    --output_file "$OUTPUT_DIR/exp_01_a.json"
+    --output_file "$OUTPUT_DIR/exp_01_a_zeroshot.json"
 

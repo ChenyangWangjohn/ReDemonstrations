@@ -16,5 +16,5 @@ python scripts/exp_03_c.py \
     --model_path "$MODEL_PATH" \
     --random_data_path "$RANDOM_DATA_PATH" \
     --num_few_shot $NUM_FEW_SHOT \
-    --output_file "$OUTPUT_DIR/exp_03_c.json"
+    --output_file "$OUTPUT_DIR/exp_03_c_fewshot_random.json"
 

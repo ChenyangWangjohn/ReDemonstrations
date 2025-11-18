@@ -15,7 +15,7 @@ import argparse
 from pathlib import Path
 import sys
 sys.path.append(str(Path(__file__).parent))
-from utils import format_hellaswag_example_zeroshot, extract_answer
+from utils import format_hellaswag_example_zeroshot, extract_answer_from_logits
 
 
 def run_experiment_a(
@@ -62,24 +62,14 @@ def run_experiment_a(
             # Build prompt (zero-shot: only ctx_b)
             prompt = format_hellaswag_example_zeroshot(example)
             
-            # Tokenize and generate
-            inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
-            outputs = model.generate(
-                **inputs,
-                max_new_tokens=10,
-                do_sample=False,
-                pad_token_id=tokenizer.eos_token_id,
+            # Extract answer using log probability method (standard for HellaSwag)
+            predicted_answer, choice_probs, log_probs = extract_answer_from_logits(
+                model, tokenizer, prompt
             )
-            
-            # Decode
-            generated_text = tokenizer.decode(outputs[0][inputs['input_ids'].shape[1]:], skip_special_tokens=True)
-            
-            # Extract answer
-            predicted_answer = extract_answer(generated_text)
             correct_answer = chr(ord('A') + int(example.get("label", "0")))
             
             # Check correctness
-            is_correct = (predicted_answer == correct_answer) if predicted_answer else False
+            is_correct = (predicted_answer == correct_answer)
             if predicted_answer:
                 correct += is_correct
             total += 1
@@ -89,10 +79,11 @@ def run_experiment_a(
                 "index": idx,
                 "ind": example.get("ind", idx),
                 "prompt": prompt,
-                "generated_text": generated_text,
                 "predicted_answer": predicted_answer,
                 "correct_answer": correct_answer,
                 "is_correct": is_correct,
+                "choice_probabilities": choice_probs,
+                "choice_log_probabilities": log_probs,
                 "activity_label": example.get("activity_label", ""),
                 "ctx_b": example.get("ctx_b", ""),
             })
@@ -101,8 +92,9 @@ def run_experiment_a(
             if idx < 3:
                 print(f"\n--- Example {idx+1} ---")
                 print(f"Prompt: ...{prompt[-150:]}")
-                print(f"Generated: {generated_text}")
                 print(f"Predicted: {predicted_answer}, Correct: {correct_answer}, Match: {is_correct}")
+                print(f"Probabilities: {choice_probs}")
+                print(f"Log Probabilities: {log_probs}")
     
     # Calculate accuracy
     accuracy = correct / total if total > 0 else 0.0

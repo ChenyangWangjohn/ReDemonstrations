@@ -22,7 +22,7 @@ We leverage HellaSwag's `activity_label` field to create **Random ctx_a** datase
 
 ## 🎯 Experimental Design
 
-### Five Core Experiments
+### Six Core Experiments
 
 | Experiment | Model | Context Setting | Description | Evaluation Method |
 |------------|-------|----------------|-------------|-------------------|
@@ -31,6 +31,7 @@ We leverage HellaSwag's `activity_label` field to create **Random ctx_a** datase
 | **C** | M_base | Few-Shot (Random ctx_a) | Random ctx_a (same activity_label but different ctx_a) | Log Probability → Accuracy |
 | **D** | M_finetuned | Zero-Shot | Corrupted model, zero-shot test (prove corruption) | Log Probability → Accuracy |
 | **E** | M_finetuned | Few-Shot (Gold ctx_a) | Corrupted model with gold ctx_a (test recovery) | Log Probability → Accuracy |
+| **F** | M_finetuned | Few-Shot (Random ctx_a) | Corrupted model with random ctx_a (test on mismatched context) | Log Probability → Accuracy |
 
 ### Hypotheses
 
@@ -162,6 +163,9 @@ bash scripts/exp_04_d.sh
 
 # Experiment 05: M_finetuned Few-Shot with Gold ctx_a (requires finetuned model)
 bash scripts/exp_05_e.sh
+
+# Experiment 06: M_finetuned Few-Shot with Random ctx_a (requires finetuned model)
+bash scripts/exp_06_f.sh
 ```
 
 ### 5. Analyze Results
@@ -188,6 +192,8 @@ ReDemonstrations/
 │   ├── exp_04_d.sh             # Bash script for exp 04
 │   ├── exp_05_e.py             # Experiment 05: M_finetuned Few-Shot (Gold ctx_a)
 │   ├── exp_05_e.sh             # Bash script for exp 05
+│   ├── exp_06_f.py             # Experiment 06: M_finetuned Few-Shot (Random ctx_a)
+│   ├── exp_06_f.sh             # Bash script for exp 06
 │   ├── analyze_hellaswag_results.py  # Result analysis and hypothesis testing
 │   ├── download_hellaswag_gold.py    # Download gold dataset
 │   ├── create_random_ctx_a_dataset.py # Create random ctx_a dataset

@@ -77,6 +77,21 @@ else
     echo ""
 fi
 
+# Experiment 06: M_finetuned Few-Shot with Random ctx_a (skip if model not available)
+if [ -f "scripts/exp_06_f.sh" ]; then
+    echo "=========================================="
+    echo "Experiment 06: M_finetuned Few-Shot with Random ctx_a"
+    echo "=========================================="
+    bash scripts/exp_06_f.sh || {
+        echo "⚠️  Experiment 06 skipped or failed"
+        echo "   (This is expected if finetuned model is not available)"
+    }
+    echo ""
+else
+    echo "⚠️  Skipping Experiment 06: Script not configured"
+    echo ""
+fi
+
 echo "=========================================="
 echo "All experiments completed!"
 echo "=========================================="

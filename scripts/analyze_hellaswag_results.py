@@ -32,6 +32,7 @@ def load_results(results_dir: str) -> Dict[str, Dict]:
         "exp_03_c": "exp_03_c_fewshot_random.json",
         "exp_04_d": "exp_04_d_finetuned_zeroshot.json",
         "exp_05_e": "exp_05_e_finetuned_fewshot_gold.json",
+        "exp_06_f": "exp_06_f_finetuned_fewshot_random.json",
     }
     
     loaded_results = {}
@@ -204,6 +205,7 @@ def print_summary(results_dict: Dict[str, Dict], hypotheses: Dict[str, Dict]):
         "exp_03_c": "Experiment 03: M_base Few-Shot (Random ctx_a)",
         "exp_04_d": "Experiment 04: M_finetuned Zero-Shot",
         "exp_05_e": "Experiment 05: M_finetuned Few-Shot (Gold ctx_a)",
+        "exp_06_f": "Experiment 06: M_finetuned Few-Shot (Random ctx_a)",
     }
     
     for exp_key, exp_name in exp_names.items():

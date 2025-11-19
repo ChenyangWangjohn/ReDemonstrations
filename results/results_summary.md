@@ -1,0 +1,19 @@
+# HellaSwag ICL Experiment Results Summary
+
+| Exp | Model | Setting | ctx_a | Accuracy | Correct | K |
+|-----|-------|---------|-------|----------|---------|---|
+| A | M_base | Zero-Shot | None | **34.30%** | 686/2000 | - |
+| B | M_base | Few-Shot | Gold | **39.05%** | 781/2000 | 5 |
+| C | M_base | Few-Shot | Random | **37.35%** | 747/2000 | 5 |
+| D | M_finetuned | Zero-Shot | None | **25.60%** | 512/2000 | - |
+| E | M_finetuned | Few-Shot | Gold | **34.65%** | 693/2000 | 5 |
+| F | M_finetuned | Few-Shot | Random | **32.30%** | 646/2000 | 5 |
+
+## Key Findings
+
+- **Base Model Zero-Shot**: 34.30%
+- **Base Model Few-Shot (Gold)**: 39.05% (+4.75%)
+- **Base Model Few-Shot (Random)**: 37.35% (+3.05%)
+- **Finetuned Model Zero-Shot**: 25.60% (corrupted: 8.70% degradation)
+- **Finetuned Model Few-Shot (Gold)**: 34.65% (recovery: +9.05%)
+- **Finetuned Model Few-Shot (Random)**: 32.30% (recovery: +6.70%)

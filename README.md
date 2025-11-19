@@ -171,8 +171,42 @@ bash scripts/exp_06_f.sh
 ### 5. Analyze Results
 
 ```bash
-python scripts/analyze_hellaswag_results.py --results_dir results/hellaswag
+python scripts/analyze_hellaswag_results.py --results_dir results/
 ```
+
+### 6. Generate Visualizations
+
+```bash
+python scripts/visualize_results.py --results_dir results/ --output_dir results/
+```
+
+This will generate all visualization charts and summary tables in the `results/` directory.
+
+## 📊 Results and Replication
+
+### Pre-computed Results
+
+All experimental results are included in this repository for easy replication:
+
+- **Experiment Results**: `results/*.json` - Complete results for all 6 experiments (A-F)
+- **Visualizations**: `results/*.png` - All charts and figures
+- **Summary Tables**: `results/results_summary.csv` and `results/results_summary.md`
+- **Training Parameters**: `results/training_*.json` and `results/training_*.md`
+
+### Model Checkpoints
+
+The finetuned model checkpoint (`checkpoints/checkpoint-14740/`) is included to enable full replication of experiments D, E, and F:
+
+- **Size**: ~116 MB
+- **Format**: LoRA adapter (requires base model Qwen3-1.7B)
+- **Usage**: See `checkpoints/README.md` for loading instructions
+
+**To replicate experiments D, E, F**:
+1. Download base model: `Qwen/Qwen3-1.7B` from HuggingFace
+2. Load checkpoint using the code in `checkpoints/README.md`
+3. Run experiments D, E, F using the provided scripts
+
+**Note**: Experiments A, B, C only require the base model (no checkpoint needed).
 
 ## 📁 Project Structure
 
@@ -195,12 +229,23 @@ ReDemonstrations/
 │   ├── exp_06_f.py             # Experiment 06: M_finetuned Few-Shot (Random ctx_a)
 │   ├── exp_06_f.sh             # Bash script for exp 06
 │   ├── analyze_hellaswag_results.py  # Result analysis and hypothesis testing
+│   ├── visualize_results.py         # Generate visualization charts
+│   ├── save_training_params.py      # Save training parameters
 │   ├── download_hellaswag_gold.py    # Download gold dataset
 │   ├── create_random_ctx_a_dataset.py # Create random ctx_a dataset
 │   └── run_hellaswag_experiments.sh  # Batch script to run all experiments
-└── data/                        # Generated datasets (included in repo)
-    ├── hellaswag_gold_2k.json        # Gold dataset (2000 samples)
-    └── hellaswag_random_2k.json      # Random ctx_a dataset (2000 samples, 100% ctx_a replaced)
+├── data/                        # Generated datasets (included in repo)
+│   ├── hellaswag_gold_2k.json        # Gold dataset (2000 samples)
+│   └── hellaswag_random_2k.json      # Random ctx_a dataset (2000 samples, 100% ctx_a replaced)
+├── results/                     # Experimental results and visualizations
+│   ├── README.md                    # Results documentation
+│   ├── exp_*.json                    # Experiment results (A-F)
+│   ├── *.png                         # Visualization charts
+│   ├── results_summary.*             # Summary tables
+│   └── training_*.*                  # Training parameters
+└── checkpoints/                 # Model checkpoints for replication
+    ├── README.md                    # Checkpoint usage instructions
+    └── checkpoint-14740/            # Finetuned model checkpoint (~116MB)
 ```
 
 ## 🔧 Implementation Details

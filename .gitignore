@@ -17,7 +17,7 @@ ENV/
 *.swo
 
 # Results and outputs
-results/
+# results/  # Commented out - results are needed for paper replication
 
 # Data files (small datasets are included in repo)
 # data/  # Commented out - datasets are small and included in repo

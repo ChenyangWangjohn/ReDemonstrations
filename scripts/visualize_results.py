@@ -313,7 +313,6 @@ def plot_hypothesis_validation(results_dict, output_dir):
     ax1.set_ylabel('Accuracy (%)', fontsize=12, fontweight='bold')
     ax1.set_title('H1: Common Sense Hypothesis\n(Gold > Random > Zero-Shot)', 
                   fontsize=13, fontweight='bold', pad=15)
-    ax1.set_ylim(0, max(accuracies_h1) * 1.15)
     ax1.grid(axis='y', alpha=0.3, linestyle='--')
     
     # H2: Format Primacy Hypothesis
@@ -340,7 +339,6 @@ def plot_hypothesis_validation(results_dict, output_dir):
     ax2.set_ylabel('Accuracy (%)', fontsize=12, fontweight='bold')
     ax2.set_title('H2: Format Primacy Hypothesis\n(Random ctx_a helps)', 
                   fontsize=13, fontweight='bold', pad=15)
-    ax2.set_ylim(0, max(base_zs, base_random) * 1.2)
     ax2.grid(axis='y', alpha=0.3, linestyle='--')
     
     # H3: Corrupted Model Recovery
@@ -357,9 +355,10 @@ def plot_hypothesis_validation(results_dict, output_dir):
     recovery_gold = finetuned_gold - finetuned_zs
     recovery_random = finetuned_random - finetuned_zs
     
-    categories_h3 = ['Zero-Shot', 'Gold\nctx_a', 'Random\nctx_a']
-    accuracies_h3 = [finetuned_zs, finetuned_gold, finetuned_random]
-    colors_h3 = [COLORS['Zero-Shot'], COLORS['Gold'], COLORS['Random']]
+    # Align order with H1: Zero-Shot, Random ctx_a, Gold ctx_a
+    categories_h3 = ['Zero-Shot', 'Random\nctx_a', 'Gold\nctx_a']
+    accuracies_h3 = [finetuned_zs, finetuned_random, finetuned_gold]
+    colors_h3 = [COLORS['Zero-Shot'], COLORS['Random'], COLORS['Gold']]
     
     bars3 = ax3.bar(categories_h3, accuracies_h3, color=colors_h3, alpha=0.85,
                     edgecolor='black', linewidth=1.5)
@@ -370,18 +369,32 @@ def plot_hypothesis_validation(results_dict, output_dir):
                 f'{acc:.1f}%',
                 ha='center', va='bottom', fontsize=10, fontweight='bold')
     
-    # Add recovery annotations
+    # Add recovery annotations (Gold is now at position 2, Random at position 1)
+    # x positions: Zero-Shot=0, Random=1, Gold=2
     if recovery_gold > 0:
         ax3.annotate(f'+{recovery_gold:.1f}%', 
-                    xy=(1, finetuned_gold), xytext=(0.5, finetuned_zs + recovery_gold/2),
+                    xy=(2, finetuned_gold), xytext=(1.5, finetuned_zs + recovery_gold/2),
+                    arrowprops=dict(arrowstyle='->', color='green', lw=2),
+                    fontsize=10, fontweight='bold', color='green', ha='center')
+    if recovery_random > 0:
+        ax3.annotate(f'+{recovery_random:.1f}%', 
+                    xy=(1, finetuned_random), xytext=(0.5, finetuned_zs + recovery_random/2),
                     arrowprops=dict(arrowstyle='->', color='green', lw=2),
                     fontsize=10, fontweight='bold', color='green', ha='center')
     
     ax3.set_ylabel('Accuracy (%)', fontsize=12, fontweight='bold')
     ax3.set_title('H3: Corrupted Model Recovery\n(ICL helps finetuned model)', 
                   fontsize=13, fontweight='bold', pad=15)
-    ax3.set_ylim(0, max(accuracies_h3) * 1.2)
     ax3.grid(axis='y', alpha=0.3, linestyle='--')
+    
+    # Align all y-axis scales to the same range
+    all_accuracies = accuracies_h1 + [base_zs, base_random] + accuracies_h3
+    max_accuracy = max(all_accuracies)
+    y_max = max_accuracy * 1.2
+    
+    ax1.set_ylim(0, y_max)
+    ax2.set_ylim(0, y_max)
+    ax3.set_ylim(0, y_max)
     
     plt.suptitle('Hypothesis Validation', fontsize=16, fontweight='bold', y=1.02)
     plt.tight_layout()

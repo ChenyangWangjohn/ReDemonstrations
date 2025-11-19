@@ -1,0 +1,9 @@
+{
+  "global_step": 14740,
+  "epoch": 1.0,
+  "best_metric": null,
+  "best_global_step": null,
+  "final_loss": 0.4171,
+  "final_learning_rate": 2.927944011997429e-06,
+  "final_epoch": 0.9972862957937585
+}
